@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lubaujar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lubaujar <lubaujar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/02/05 05:38:06 by lubaujar          #+#    #+#             */
-/*   Updated: 2015/02/05 05:38:08 by lubaujar         ###   ########.fr       */
+/*   Created: 2014/11/05 15:41:52 by lubaujar          #+#    #+#             */
+/*   Updated: 2014/11/07 17:23:48 by lubaujar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# include "libft/libft.h"
-# include <fcntl.h>
+void	ft_bzero(void *s, size_t n)
+{
+	size_t	i;
+	char	*str;
 
-# define BUFF_SIZE 8
-
-int	get_next_line(int const fd, char **line);
-
-#endif
+	i = 0;
+	str = (char *)s;
+	while (i < n)
+	{
+		str[i] = 0;
+		i++;
+	}
+}

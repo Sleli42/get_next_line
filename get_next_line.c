@@ -3,67 +3,75 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lubaujar <lubaujar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lubaujar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/11/18 23:18:08 by lubaujar          #+#    #+#             */
-/*   Updated: 2014/12/08 01:07:03 by lubaujar         ###   ########.fr       */
+/*   Created: 2015/02/05 05:37:53 by lubaujar          #+#    #+#             */
+/*   Updated: 2015/02/05 05:37:59 by lubaujar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libft/libft.h"
+#include <stdlib.h>
+#include <unistd.h>
 #include "get_next_line.h"
 
-int		ft_strlen_line(char *buff)
+static int		gnl_check_stock(char **stock, char **line)
 {
-	int	len;
+	char			*tmp;
 
-	len = 0;
-	while (buff[len] && buff[len] != '\n')
-		len++;
-	return (len);
+	if ((tmp = ft_strchr(*stock, '\n')))
+	{
+		*tmp = '\0';
+		*line = ft_strdup(*stock);
+		free(*stock);
+		*stock = ft_strdup(tmp + 1);
+		tmp = NULL;
+		return (1);
+	}
+	return (0);
 }
 
-char	*ft_read_file(int fd)
+static int		gnl_check_read(char *buffer, char **stock, char **line)
 {
-	char	*ret;
-	char	buff[BUFF_SIZE + 1];
-	int		read_all;
+	char			*tmp;
 
-	read_all = 1;
-	ret = ft_strnew(sizeof(char) + 1);
-	if (buff == NULL)
-		return (NULL);
-	while ((read_all = read(fd, buff, BUFF_SIZE)) != 0)
+	if ((tmp = ft_strchr(buffer, '\n')))
 	{
-		if (read_all < 0)
-			return (NULL);
-		buff[read_all] = '\0';
-		ret = ft_strjoin(ret, buff);
-		if (ret == NULL)
-			return (NULL);
-		ft_memset(buff, 0, read_all);
+		*tmp = '\0';
+		*line = ft_strjoin(*stock, buffer);
+		free(*stock);
+		*stock = ft_strdup(tmp + 1);
+		tmp = NULL;
+		free(buffer);
+		return (1);
 	}
-	return (ret);
+	return (0);
 }
 
-int	get_next_line(int const fd, char **line)
+int				get_next_line(int const fd, char **line)
 {
-	static char	*buff;
+	static char		*stock = NULL;
+	char			*buffer;
+	int				ret;
 
-	if (fd < 0 && fd > 2)
+	if (!line || !(buffer = ft_strnew(BUFF_SIZE)))
 		return (-1);
-	if (buff == NULL)
+	if (stock)
+		if (gnl_check_stock(&stock, line))
+			return (1);
+	while ((ret = read(fd, buffer, BUFF_SIZE)) > 0)
 	{
-		buff = ft_read_file(fd);
-		if (buff == NULL)
-			return (-1);
+		buffer[ret] = '\0';
+		if (gnl_check_read(buffer, &stock, line))
+			return (1);
+		stock = ft_strjoin(stock, buffer);
 	}
-	*line = ft_strsub(buff, 0, ft_strlen_line(buff));
-	if (*line == NULL)
+	free(buffer);
+	if (ret == -1 || line == NULL)
 		return (-1);
-	buff = buff + ft_strlen_line(buff);
-	if (*buff == '\0')
+	if (stock == NULL)
 		return (0);
-	buff++;
-	return (1);
+	*line = ft_strdup(stock);
+	free(stock);
+	stock = NULL;
+	return (0);
 }

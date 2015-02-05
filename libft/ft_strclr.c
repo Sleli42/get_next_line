@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strclr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lubaujar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lubaujar <lubaujar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/02/05 05:38:06 by lubaujar          #+#    #+#             */
-/*   Updated: 2015/02/05 05:38:08 by lubaujar         ###   ########.fr       */
+/*   Created: 2014/11/09 22:51:22 by lubaujar          #+#    #+#             */
+/*   Updated: 2014/11/11 10:13:49 by lubaujar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# include "libft/libft.h"
-# include <fcntl.h>
-
-# define BUFF_SIZE 8
-
-int	get_next_line(int const fd, char **line);
-
-#endif
+void	ft_strclr(char *s)
+{
+	if (s != NULL)
+	{
+		while (*s)
+		{
+			*s = '\0';
+			s++;
+		}
+	}
+}

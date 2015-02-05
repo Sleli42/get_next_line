@@ -1,35 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lubaujar <lubaujar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/11/19 23:16:10 by lubaujar          #+#    #+#             */
-/*   Updated: 2014/12/08 01:07:13 by lubaujar         ###   ########.fr       */
+/*   Created: 2014/11/10 00:43:18 by lubaujar          #+#    #+#             */
+/*   Updated: 2014/11/13 14:32:13 by lubaujar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../libft/libft.h"
-#include "get_next_line.h"
+#include "libft.h"
 
-int	main(int argc, char **argv)
+char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	int		fd;
-	int		i;
-	char	*buff_main;
+	char			*str;
+	unsigned int	i;
+	unsigned int	len;
+	unsigned int	index;
 
-	if (argc > 1)
+	if (s == NULL)
+		return (NULL);
+	if (f == NULL)
+		return (ft_strdup(s));
+	i = 0;
+	index = 0;
+	len = ft_strlen(s);
+	str = ft_strnew(len);
+	while (i < len)
 	{
-		i = 1;
-		fd = open(argv[i], O_RDONLY);
-		buff_main = *argv;
-		buff_main = (char *)malloc(sizeof(char *) * BUFF_SIZE);
-		while (get_next_line(fd, &buff_main) == 1)
-		{
-			ft_putendl(buff_main);
-			ft_putchar('\n');
-		}
+		str[i] = (*f)(index, s[i]);
+		i++;
+		index++;
 	}
-	return (0);
+	return (str);
 }
